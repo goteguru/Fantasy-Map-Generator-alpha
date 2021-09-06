@@ -436,6 +436,7 @@ function dowloadMap() {
 }
 
 async function saveToDropbox() {
+  const sharableLinkContainer = document.getElementById("sharableLinkContainer");
   if (customization) return tip("Map cannot be saved when edit mode is active, please exit the mode and retry", false, "error");
   closeDialogs("#alert");
   const mapData = getMapData();
@@ -447,13 +448,6 @@ async function saveToDropbox() {
     console.error(msg);
     tip("Cannot save .map to your Dropbox", true, "error", 8000);
   }
-}
-
-function createSharableDropboxLink() {
-  const sharableLink = document.getElementById("sharableLink");
-  const sharableLinkContainer = document.getElementById("sharableLinkContainer");
-  // to be implemented
-  console.log("TODO sharelink:", Cloud.providers.dropbox.getLink())
 }
 
 function saveGeoJSON_Cells() {

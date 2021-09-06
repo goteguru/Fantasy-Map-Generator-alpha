@@ -19,6 +19,26 @@ async function loadFromDropbox(fileName) {
   uploadMap(blob);
 }
 
+async function createSharableDropboxLink() {
+  const mapFile = document.querySelector("#loadFromDropbox select").value;
+  const sharableLink = document.getElementById("sharableLink");
+  const sharableLinkContainer = document.getElementById("sharableLinkContainer");
+  try {
+    const url = await Cloud.providers.dropbox.getLink(mapFile);
+  } catch {
+    tip("Dropbox API error. Can not create link.", true, "error", 2000);
+    return
+  }
+
+  const fmg = window.location.href.split("?")[0];
+  const link = `${fmg}/?maplink=${url}`;
+  const shortLink = link.slice(0, 50) + "...";
+
+  sharableLinkContainer.style.display = "block";
+  sharableLink.innerText = shortLink;
+  sharableLink.setAttribute("href", link);
+}
+
 function loadMapPrompt(blob) {
   const workingTime = (Date.now() - last(mapHistory).created) / 60000; // minutes
   if (workingTime < 5) {

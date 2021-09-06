@@ -3490,16 +3490,6 @@
         <button onclick="quickSave()" data-tip="Save the project to browser storage (quick save). It can be unreliable. Shortcut: F6">browser</button>
       </div>
       <p style="font-style: italic">Maps are saved in <i>.map</i> format, that can be loaded back via 'Load' in menu. Please keep noted that we do not keep any data on our side. There is no way to restore the progress if .map file is lost. Please keep old .map files on your machine or cloud storage as backups.</p>
-      <p style="font-style: italic">Saving to Dropbox may not be allowed for big files. In this case open <a href="https://www.dropbox.com/home/FMG" target="_blank">Dropbox</a>, download the .map file and upload it manually.</p>
-
-      <div style="margin-top: .3em" data-tip="Select .map file on dropbox and share a sharable link">
-        <strong>Create sharable link</strong>
-        <button onclick="createSharableDropboxLink()">select file</button>
-        <div id="sharableLinkContainer" style="display: none">
-          <a id="sharableLink" target="_blank"></a>
-          <i data-tip="Copy link to the clipboard" onclick="copyLinkToClickboard()" class="icon-clone pointer"></i>
-        </div>
-      </div>
     </div>
 
     <div id="loadMapData" style="display: none" class="dialog">
@@ -3514,6 +3504,14 @@
         <select>
         </select>
         <button onclick="loadFromDropbox()" data-tip="Load .map file from your Dropbox">Open</button>
+        <button onclick="createSharableDropboxLink()" data-tip="Select .map file on dropbox and share a sharable link">Create link</button>
+
+        <div style="margin-top: .3em">
+          <div id="sharableLinkContainer" style="display: none">
+            <a id="sharableLink" target="_blank"></a>
+            <i data-tip="Copy link to the clipboard" onclick="copyLinkToClickboard()" class="icon-clone pointer"></i>
+          </div>
+        </div>
       </div>
     </div>
 

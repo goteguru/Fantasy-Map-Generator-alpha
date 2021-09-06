@@ -38,6 +38,17 @@ window.Cloud = (function () {
       if (this.token) this.connect(this.token)
     },
 
+    async call(name, param) {
+      try {
+        return await this.api[name](param)
+      } catch (e) {
+        if (e.name !== "DropboxResponseError") throw(e)
+        // retry with auth
+        await this.auth()
+        return await this.api[name](param)
+      }
+    },
+
     connect(token) {
       const clientId = this.clientId
       const auth = new Dropbox.DropboxAuth({ clientId })
@@ -47,22 +58,22 @@ window.Cloud = (function () {
 
     async save(fileName, contents) {
       if (!this.api) await this.auth()
-      const resp = this.api.filesUpload({ path: '/' + fileName, contents })
+      const resp = this.call('filesUpload', { path: '/' + fileName, contents })
       console.log("Dropbox response:", resp)
       return true
     },
 
     async load(path) {
       if (!this.api) await this.auth()
-      const resp = await this.api.filesDownload({ path })
+      const resp = await this.call('filesDownload', { path })
       const blob = resp.result.fileBlob
       if (!blob) throw(new Error('Invalid response from dropbox.'))
-      return blob 
+      return blob
     },
 
     async list() {
       if (!this.api) return null
-      const resp = await this.api.filesListFolder({ path: '' })
+      const resp = await this.call('filesListFolder', { path: '' })
       return resp.result.entries.map(e => ({ name: e.name, path: e.path_lower }))
     },
 
@@ -90,17 +101,27 @@ window.Cloud = (function () {
       setToken(this.name, token)
       this.connect(token)
       this.authWindow.close()
-      console.log('dispacth auth event')
       window.dispatchEvent(new Event('dropboxauth'))
     },
 
-    getLink(filePath) {
-      console.warn("TODO:shareabledroboxlink ", filePath)
-      // to be implemented
+    async getLink(path) {
+      if (!this.api) await this.auth()
+      const resp = await this.call('sharingCreateSharedLinkWithSettings', {
+        path,
+        settings: {
+          // require_password: false,
+          // audience: 'public',
+          access: 'viewer',
+          // requested_visibility: 'public',
+          // allow_download: true,
+        }
+      })
+      console.log("dropbox link object:", resp.result)
+      return resp.result.url
     },
   }
 
-  // register providers
+  // register providers here:
   const providers = {
     dropbox: DBP,
   }
