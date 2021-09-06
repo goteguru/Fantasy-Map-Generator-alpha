@@ -106,14 +106,22 @@ window.Cloud = (function () {
 
     async getLink(path) {
       if (!this.api) await this.auth()
-      const resp = await this.call('sharingCreateSharedLinkWithSettings', {
+      let resp
+
+      // already exists?
+      resp = await this.call('sharingListSharedLinks', { path })
+      if (resp.result.links.length)
+        return resp.result.links[0].url
+
+      // create new
+      resp = await this.call('sharingCreateSharedLinkWithSettings', {
         path,
         settings: {
-          // require_password: false,
-          // audience: 'public',
+          require_password: false,
+          audience: 'public',
           access: 'viewer',
-          // requested_visibility: 'public',
-          // allow_download: true,
+          requested_visibility: 'public',
+          allow_download: true,
         }
       })
       console.log("dropbox link object:", resp.result)

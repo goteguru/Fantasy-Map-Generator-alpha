@@ -32,7 +32,9 @@ async function createSharableDropboxLink() {
   }
 
   const fmg = window.location.href.split("?")[0];
-  const link = `${fmg}/?maplink=${url}`;
+  const reallink= `${fmg}?maplink=${url}`;
+  // voodoo magic required by the yellow god of CORS
+  const link = reallink.replace('www.dropbox.com/s/', 'dl.dropboxusercontent.com/1/view/')
   const shortLink = link.slice(0, 50) + "...";
 
   sharableLinkContainer.style.display = "block";
