@@ -19,6 +19,9 @@ if (rn(localStorage.getItem("version"), 1) !== rn(version, 1)) {
   setTimeout(showWelcomeMessage, 8000);
 }
 
+// create global namespace
+window.fmg = {}
+
 // append svg layers (in default order)
 let svg = d3.select("#map");
 let defs = svg.select("#deftemp");
