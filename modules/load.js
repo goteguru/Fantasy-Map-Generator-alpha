@@ -23,8 +23,9 @@ async function createSharableDropboxLink() {
   const mapFile = document.querySelector("#loadFromDropbox select").value;
   const sharableLink = document.getElementById("sharableLink");
   const sharableLinkContainer = document.getElementById("sharableLinkContainer");
+  let url
   try {
-    const url = await Cloud.providers.dropbox.getLink(mapFile);
+    url = await Cloud.providers.dropbox.getLink(mapFile);
   } catch {
     tip("Dropbox API error. Can not create link.", true, "error", 2000);
     return
