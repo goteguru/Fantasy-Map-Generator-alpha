@@ -38,7 +38,7 @@
         .then((resp) => {
             const token = resp.result.access_token;
             console.log('calling window opener...')
-            window.opener.setDropBoxToken(token);
+            window.opener.Cloud.providers.dropbox.setDropBoxToken(token)
         }).catch((error) => {
             console.error(error)
         });

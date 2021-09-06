@@ -12,16 +12,11 @@ function quickLoad() {
   });
 }
 
-function loadFromDropbox() {
-  const options = {
-    success: function (files) {
-      const url = files[0].link;
-      loadMapFromURL(url);
-    },
-    linkType: "direct",
-    extensions: [".map"]
-  };
-  Dropbox.choose(options);
+async function loadFromDropbox(fileName) {
+  const map = document.querySelector("#loadFromDropbox select").value;
+  console.log('loading dropbox map', map);
+  const blob = await Cloud.providers.dropbox.load(map);
+  uploadMap(blob);
 }
 
 function loadMapPrompt(blob) {

@@ -3506,9 +3506,14 @@
       <div style="margin-bottom: .3em">Load map from</div>
       <div>
         <button onclick="mapToLoad.click()" data-tip="Load .map file from local disk">local disk</button>
-        <button onclick="loadFromDropbox()" data-tip="Load .map file from your Dropbox">Dropbox</button>
         <button onclick="loadURL()" data-tip="Load .map file from URL (server should allow CORS)">URL</button>
         <button onclick="quickLoad()" data-tip="Load map from browser storage (if saved before)">storage</button>
+      </div>
+      <div id="loadFromDropbox">
+        <p>From your Dropbox account:</p>
+        <select>
+        </select>
+        <button onclick="loadFromDropbox()" data-tip="Load .map file from your Dropbox">Open</button>
       </div>
     </div>
 
@@ -4255,6 +4260,7 @@
   <script defer src="modules/ui/style.js"></script>
   <script defer src="modules/save.js"></script>
   <script defer src="modules/load.js"></script>
+  <script defer src="modules/cloud.js"></script>
   <script defer src="main.js"></script>
   <script defer src="modules/relief-icons.js"></script>
   <script defer src="modules/ui/tools.js"></script>

@@ -435,64 +435,25 @@ function dowloadMap() {
   window.URL.revokeObjectURL(URL);
 }
 
-function saveToDropbox() {
+async function saveToDropbox() {
   if (customization) return tip("Map cannot be saved when edit mode is active, please exit the mode and retry", false, "error");
   closeDialogs("#alert");
-  const fmg = window.fmg
-  if (!fmg.dropbox) fmg.dropbox = {}
-  if (!fmg.dropbox.api) {
-    const url = window.location.origin + window.location.pathname + 'dropbox.html'
-    fmg.dropbox.authWindow = window.open(url, 'auth', 'width=640,height=480');
-    // child window expected to call window.opener.setDropBoxToken (below)
-    window.addEventListener('auth', _saveToDropbox);
-  } else _saveToDropbox();
-}
-
-function setDropBoxToken(token) {
-  console.log('Access token got:', token);
-  const auth = new Dropbox.DropboxAuth({ clientId: 'sp7tzwm27u2w5ns', });
-  auth.setAccessToken(token);
-  window.fmg.dropbox.api = new Dropbox.Dropbox({ auth });
-  window.fmg.dropbox.authWindow.close();
-  console.log('dispacth auth event');
-  window.dispatchEvent(new Event('auth'));
-}
-
-function _saveToDropbox(event) {
-  const api = window.fmg.dropbox.api;
-  // api.filesListFolder({ path: '' }).then( x => {
   const mapData = getMapData();
   const filename = getFileName() + ".map";
-  api.filesUpload({ path: '/' + filename, contents: mapData })
-  .then(resp => {
-    console.log("Dropbox response:", resp);
+  try {
+    await Cloud.providers.dropbox.save(filename, mapData);
     tip("Map is saved to your Dropbox", true, "success", 8000);
-  })
-  .catch(function(error) {
-    console.error(error);
+  } catch (msg) {
+    console.error(msg);
     tip("Cannot save .map to your Dropbox", true, "error", 8000);
-  });
+  }
 }
 
 function createSharableDropboxLink() {
   const sharableLink = document.getElementById("sharableLink");
   const sharableLinkContainer = document.getElementById("sharableLinkContainer");
-
-  const options = {
-    success: function (files) {
-      const url = files[0].link;
-      const fmg = window.location.href.split("?")[0];
-      const link = `${fmg}/?maplink=${url}`;
-      const shortLink = link.slice(0, 50) + "...";
-
-      sharableLinkContainer.style.display = "block";
-      sharableLink.innerText = shortLink;
-      sharableLink.setAttribute("href", link);
-    },
-    linkType: "direct",
-    extensions: [".map"]
-  };
-  Dropbox.choose(options);
+  // to be implemented
+  console.log("TODO sharelink:", Cloud.providers.dropbox.getLink())
 }
 
 function saveGeoJSON_Cells() {
